@@ -1,24 +1,27 @@
 let resultsContainer = document.getElementsByClassName("container")[0];
+const loader = document.querySelector(".loader");
 
 function debounce(func, wait) {
   let timeout;
   return function (...args) {
     const context = this;
     clearTimeout(timeout);
+    loader.style.display = "block";
     timeout = setTimeout(() => {
       func.apply(context, args);
     }, wait);
   };
 }
 
-const validateInput = (el) => {
+const debouncedValidateInput = debounce((el) => {
   if (el.value === "") {
     resultsContainer.innerHTML =
       "<p>Type something in the above search input</p>";
+    loader.style.display = "none";
   } else {
     generateResults(el.value, el);
   }
-};
+}, 500);
 
 const generateResults = (searchValue, inputField) => {
   fetch(
